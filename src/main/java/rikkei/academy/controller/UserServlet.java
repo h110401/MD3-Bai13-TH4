@@ -28,7 +28,7 @@ public class UserServlet extends HttpServlet {
             case "permission":
                 addUserPermission(request, response);
                 break;
-            case "test-without-tran":
+            case "test-with-tran":
                 testWithoutTran(request, response);
                 break;
             default:
