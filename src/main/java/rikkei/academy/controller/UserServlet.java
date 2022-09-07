@@ -28,11 +28,17 @@ public class UserServlet extends HttpServlet {
             case "permission":
                 addUserPermission(request, response);
                 break;
-            case "":
+            case "test-without-tran":
+                testWithoutTran(request, response);
+                break;
             default:
                 listUser(request, response);
 
         }
+    }
+
+    private void testWithoutTran(HttpServletRequest request, HttpServletResponse response) {
+        this.userService.insertUpdateWithoutTransaction();
     }
 
     private void listUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

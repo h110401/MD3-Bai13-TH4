@@ -2,18 +2,33 @@ package rikkei.academy.service;
 
 import rikkei.academy.model.User;
 
+import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceIMPL implements IUserService {
 
-    private String jdbcURL = "jdbc:mysql://localhost:3306/md3_b13_th2_transaction";
-    private String jdbcUsername = "root";
-    private String jdbcPassword = "123456";
+    private final String jdbcURL = "jdbc:mysql://localhost:3306/md3_b13_th2_transaction";
+    private final String jdbcUsername = "root";
+    private final String jdbcPassword = "123456";
 
     private static final String INSERT_USER_SQL = "insert into users(name,email,country) value (?,?,?)";
     private static final String SELECT_ALL_USERS = "select * from users";
+
+    private static final String SQL_INSERT = "INSERT INTO EMPLOYEE (NAME, SALARY, CREATED_DATE) values (?,?,?)";
+    private static final String SQL_UPDATE = "UPDATE EMPLOYEE SET SALARY=? WHERE NAME=?";
+    private static final String SQL_TABLE_CREATE = "" +
+            "CREATE TABLE EMPLOYEE" +
+            "(" +
+            "ID serial," +
+            "Name varchar(100) NOT NULL," +
+            "SALARY numeric(15,2) NOT NULL," +
+            "CREATED_DATE timestamp," +
+            "PRIMARY KEY (ID)" +
+            ")";
+    private static final String SQL_TABLE_DROP = "DROP TABLE IF EXISTS EMPLOYEE";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -89,6 +104,36 @@ public class UserServiceIMPL implements IUserService {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void insertUpdateWithoutTransaction() {
+        try (
+                Connection connection = getConnection();
+                Statement statement = connection.createStatement();
+                PreparedStatement psUpdate = connection.prepareStatement(SQL_UPDATE);
+                PreparedStatement psInsert = connection.prepareStatement(SQL_INSERT)
+        ) {
+            statement.execute(SQL_TABLE_DROP);
+            statement.execute(SQL_TABLE_CREATE);
+
+            psInsert.setString(1, "Quynh");
+            psInsert.setBigDecimal(2, new BigDecimal(10));
+            psInsert.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            psInsert.execute();
+
+            psInsert.setString(1, "Ngan");
+            psInsert.setBigDecimal(2, new BigDecimal(20));
+            psInsert.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+            psInsert.execute();
+
+            psUpdate.setBigDecimal(1, new BigDecimal("999.99"));
+            psUpdate.setString(2, "Quynh");
+            psUpdate.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

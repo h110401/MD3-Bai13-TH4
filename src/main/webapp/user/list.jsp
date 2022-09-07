@@ -27,7 +27,7 @@
             <th>Country</th>
             <th>Actions</th>
         </tr>
-        <c:forEach var="user" items="${requestScope['listUser']}">
+        <c:forEach var="user" items="${requestScope['userList']}">
             <tr>
                 <td><c:out value="${user.id}"/></td>
                 <td><c:out value="${user.name}"/></td>
